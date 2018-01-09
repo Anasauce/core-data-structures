@@ -2,85 +2,59 @@ import TreeNode from './treeNode'
 
 export default class BinarySearchTree {
   constructor() {
-    this.size = 0,
     this.root = null
   }
 
-  insert( data ) {
-    const insertNode = new TreeNode( data )
-    let current = this.root
-
+  insert( val ) {
     if ( !this.root ) {
-      this.root = insertNode
+      this.root = new TreeNode( val )
+      return true
     } else {
-      while ( current ) {
-        if ( insertNode.data > current.data ) {
-          if ( current.right ) {
-           current = current.right
-          } else {
-           current.right = insertNode
-           current = null
-          }
-        } else {
-          if ( current.left ) {
-           current = current.left
-          } else {
-           current.left = insertNode
-           current = null
-          }
-        }
-      }
+      return this.insertHelper( this.root, val )
     }
-    this.size++
   }
 
-  recursiveInsert( data ) {
-    const helperInsert = ( data, subtree ) => {
-     if ( data < subtree.data ) {
-       if ( !subtree.left ) {
-         subtree.left = new TreeNode ( data )
-       } else {
-         helperInsert( data, subtree.left )
-       }
-     } else {
-       if ( !subtree.right ) {
-         subtree.right = new TreeNode ( data )
-       } else {
-         helperInsert( data, subtree.right )
-       }
-     }
-    }
-
-    if ( !this.root ) { this.root = new TreeNode ( data ) }
-    else { helperInsert( data, this.root ) }
-    this.size++
-  }
-
-  search( findMe ) {
-
-    const searchHelper = ( data, subtree ) => {
-      if ( data < subtree.data ) {
-        if ( subtree.left ) {
-          if ( data === subtree.left.data ) { return subtree.left }
-          else { return searchHelper( data, subtree.left ) }
-        }
+  insertHelper( cur, val ) {
+    if ( val === cur.data ) {
+      return false
+    } else if ( val < cur.data ) {
+      if ( !cur.left ) {
+        cur.left = new TreeNode( val )
+        return true
       } else {
-        if ( subtree.right ) {
-          if ( data === subtree.right.data ) { return subtree.right }
-          else { return searchHelper( data, subtree.right ) }
-        }
+        this.insertHelper( cur.left, val )
       }
-      return null
+    } else if ( val > cur.data ) {
+      if ( !cur.right ) {
+        cur.right = new TreeNode( val )
+        return true
+      } else {
+        this.insertHelper( cur.right, val )
+      }
     }
+    return false
+  }
 
-    if ( this.root.data === findMe ) {
+  find( val ) {
+    if ( !val ) return false
+    if ( this.root.data === val ) {
       return this.root
     } else {
-      return searchHelper( findMe, this.root )
+      return this.findHelper( this.root, val )
+    }
+  }
+  
+  findHelper( cur, val ) {
+    if( !cur ) return false
+    if ( cur.data === val ) return cur
+    else if ( val < cur.data ) {
+      return this.findHelper( cur.left, val )
+    } else if ( val > cur.data ) {
+      return this.findHelper( cur.right, val )
     }
   }
 
-  remove() {
+  delete() {
 
   }
 
